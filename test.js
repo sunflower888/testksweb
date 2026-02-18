@@ -120,14 +120,12 @@ goBtn.addEventListener("click", () => {
 
 // ⭐ 변경: 초기화 함수 (JSON 로드 후 시작)
 async function init() {
-  const wordData1 = await loadJSON("./file/words_basic.json");
-  const wordData2 = await loadJSON("./file/owords_1.json");
-  const wordData3 = await loadJSON("./file/owords_2.json");
+  const wordData1 = await loadJSON("./file/test.json");
+  const wordData2 = await loadJSON("./file/test2.json");
 
   allData = {
     1: wordData1,
     2: wordData2,
-    3: wordData3,
   };
 
   currentData = wordData1; // 기본 데이터
@@ -136,4 +134,3 @@ async function init() {
 
 // ⭐ 변경: init 실행
 init();
-
