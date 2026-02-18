@@ -17,8 +17,8 @@ async function loadJson(path) {
 async function init() {
   try {
     allData = {
-      1: await loadJson("./file/words_basic.json"),
-      2: await loadJson("./file/owords_1.json"),
+      1: await loadJson("./file/test.json"),
+      2: await loadJson("./file/test2.json"),
       3: await loadJson("./file/owords_2.json"),
     };
 
@@ -130,4 +130,5 @@ goBtn.addEventListener("click", () => {
 
 // ------------------ 실행 ------------------
 init();
+
 
