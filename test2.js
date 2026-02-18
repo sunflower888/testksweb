@@ -23,7 +23,7 @@ export function createMain() {
   return { container, rows };
 }
 
-// ⬅️ DOM 재생성 ❌, 내용만 변경 ------------------------------------------------
+// ⬅️ DOM 재생성 ❌, 내용만 변경
 export function updateMain(rows, data, showKo) {
   rows.forEach((row, i) => {
     const item = data[i];
@@ -41,7 +41,7 @@ export function updateMain(rows, data, showKo) {
   });
 }
 
-// navArr (0, 1~10) ------------------------------------------
+// navArr (0, 1~10)
 export function navArr(num) {
   const start = num * 10 + 1;
   const end = start + 9;
@@ -50,7 +50,7 @@ export function navArr(num) {
   return arr;
 }
 
-// 네비게이션 ----------------------------------------------------
+// 네비게이션
 export function navContent(onchange) {
   let num = 0;
 
@@ -67,13 +67,11 @@ export function navContent(onchange) {
   prevBtn.textContent = "◀";
   nextBtn.textContent = "▶";
 
-  // -------------------
   function update() {
     current.textContent = num;
     onchange?.(num); // onchange 있으면 실행, 없으면 하지마라 // if(onchange){onchange(num);}랑 거의 동일
   }
 
-  // -------------------------
   prevBtn.addEventListener("click", () => {
     if (num > 0) {
       num--;
