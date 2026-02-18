@@ -1,21 +1,25 @@
-import wordData1 from "./file/test.json" assert { type: "json" };
-import wordData2 from "./file/test2.json" assert { type: "json" };
+// ❌ JSON import 제거
+// import wordData1 from "./file/test2.json" assert { type: "json" };
+// import wordData2 from "./file/test.json" assert { type: "json" };
+
 import { createMain, updateMain, navArr, navContent } from "./test2.js";
 
 let navNum = 0;
 let showKo = true;
 
-// ------------------ allData 객체 ------------------
-const allData = {
-  1: wordData1,
-  2: wordData2,
-};
+// ⭐ 변경: fetch로 JSON 불러오기
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error("JSON 로드 실패: " + path);
+  return res.json();
+}
 
-// 현재 사용하는 데이터
-let currentData = wordData1; // 기본값
+// ⭐ 변경: 전역 데이터 컨테이너
+let allData = {};
+let currentData = [];
 
-// 한 번만 생성
-const { container: main, rows } = createMain(); // 구조분해할당
+// ------------------ DOM 구조 (한 번만 생성) ------------------
+const { container: main, rows } = createMain();
 document.body.appendChild(main);
 
 // 체크박스 -------------------------------------------------------
@@ -25,7 +29,6 @@ check.type = "checkbox";
 check.checked = true;
 document.body.appendChild(check);
 
-// 체크박스 이벤트
 check.addEventListener("change", () => {
   showKo = check.checked;
   render();
@@ -40,11 +43,7 @@ document.body.appendChild(darkMode);
 darkMode.addEventListener("change", () => {
   document.documentElement.classList.toggle("dark");
 
-  if (darkMode.checked) {
-    localStorage.setItem("theme", "dark");
-  } else {
-    localStorage.setItem("theme", "light");
-  }
+  localStorage.setItem("theme", darkMode.checked ? "dark" : "light");
 });
 
 // 저장된 테마 적용
@@ -66,13 +65,13 @@ loadBtn.className = "loadBtn";
 document.body.appendChild(loadBtn);
 
 loadBtn.addEventListener("click", () => {
-  const key = dataInput.value.trim(); // trim: 공백제거
+  const key = dataInput.value.trim();
   if (allData[key]) {
     currentData = allData[key];
-    navNum = 0; // 페이지 초기화
+    navNum = 0;
     render();
   } else {
-    alert("잘못된 번호입니다. 1, 2, 3 중 하나를 입력하세요.");
+    alert("잘못된 번호입니다. 1, 2 중 하나를 입력하세요.");
   }
 });
 
@@ -82,11 +81,9 @@ function mainData(num) {
   return currentData.filter((item) => nums.includes(Number(item.no)));
 }
 
-// 렌더 (DOM 재생성 (X), 내용만 변경)
+// 렌더
 function render() {
   const data = mainData(navNum);
-
-  // updateMain(main, data, showKo);
   updateMain(rows, data, showKo);
 }
 
@@ -114,12 +111,26 @@ goBtn.addEventListener("click", () => {
   const pageNum = Number(navInput.value.trim());
   if (!isNaN(pageNum)) {
     navNum = pageNum;
-    counter.setPage(pageNum); // 여기서 navContent 내부 상태와 동기화
+    counter.setPage(pageNum);
     render();
   } else {
     alert("올바른 숫자를 입력하세요.");
   }
 });
 
-// ------------------ 초기 렌더 ------------------
-render();
+// ⭐ 변경: 초기화 함수 (JSON 로드 후 시작)
+async function init() {
+  const wordData1 = await loadJSON("./file/test2.json");
+  const wordData2 = await loadJSON("./file/test.json");
+
+  allData = {
+    1: wordData1,
+    2: wordData2,
+  };
+
+  currentData = wordData1; // 기본 데이터
+  render();
+}
+
+// ⭐ 변경: init 실행
+init();
