@@ -1,7 +1,11 @@
 // DOM이 로드된 후 실행
 document.addEventListener("DOMContentLoaded", () => {
-  // div 생성
   const container = document.createElement("div");
+
+  // 입력창 생성
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "1 또는 2 입력";
 
   // 버튼 생성
   const button = document.createElement("button");
@@ -12,16 +16,29 @@ document.addEventListener("DOMContentLoaded", () => {
   resultDiv.id = "result";
 
   // 버튼 클릭 이벤트
-  button.addEventListener("click", loadData);
+  button.addEventListener("click", () => {
+    loadData(input.value);
+  });
 
-  // 요소 추가
+  container.appendChild(input);
   container.appendChild(button);
   document.body.appendChild(container);
   document.body.appendChild(resultDiv);
 });
 
-function loadData() {
-  fetch("./file/test.json")
+function loadData(number) {
+  let fileName = "";
+
+  if (number === "1") {
+    fileName = "test.json";
+  } else if (number === "2") {
+    fileName = "test2.json";
+  } else {
+    alert("1 또는 2만 입력하세요.");
+    return;
+  }
+
+  fetch(`./file/${fileName}`)
     .then((response) => response.json())
     .then((data) => {
       const resultDiv = document.getElementById("result");
@@ -29,7 +46,7 @@ function loadData() {
 
       data.forEach((item) => {
         const p = document.createElement("p");
-        p.textContent = `${item.no}. ${item["en "]} - ${item.ko}`;
+        p.textContent = `${item.no}. ${item.en} - ${item.ko}`;
         resultDiv.appendChild(p);
       });
     })
