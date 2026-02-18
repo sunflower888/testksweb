@@ -17,9 +17,9 @@ async function loadJson(path) {
 async function init() {
   try {
     allData = {
-      1: await loadJson("../file/words_basic.json"),
-      2: await loadJson("../file/owords_1.json"),
-      3: await loadJson("../file/owords_2.json"),
+      1: await loadJson("./file/words_basic.json"),
+      2: await loadJson("./file/owords_1.json"),
+      3: await loadJson("./file/owords_2.json"),
     };
 
     currentData = allData[1]; // 기본값
@@ -130,3 +130,4 @@ goBtn.addEventListener("click", () => {
 
 // ------------------ 실행 ------------------
 init();
+
